@@ -52,6 +52,7 @@ class MenuProject extends Menu {
 
 	private MenuItemImpl addCircuit = new MenuItemImpl(this, LogisimMenuBar.ADD_CIRCUIT);
     private JMenuItem plugin = new JMenuItem();
+    private JMenuItem willames = new JMenuItem();
     private JMenu loadInternaPlugin = new JMenu();
     private JMenuItem[] array = PluginUtils.makeArray();
 	private JMenu loadLibrary = new JMenu();
@@ -106,6 +107,9 @@ class MenuProject extends Menu {
 
 		add(addCircuit);
         add(plugin);
+        addSeparator();
+        add(willames);
+        addSeparator();
         add(loadInternaPlugin);
 		add(loadLibrary);
 		add(unload);
@@ -150,6 +154,7 @@ class MenuProject extends Menu {
 		setText(Strings.get("projectMenu"));
 		addCircuit.setText(Strings.get("projectAddCircuitItem"));
 		plugin.setText(Strings.get("projectPluginItem"));
+		willames.setText(Strings.get("projectWillamesItem"));
         loadInternaPlugin.setText(Strings.get("projectLoadInternalPlugin"));
 		loadLibrary.setText(Strings.get("projectLoadLibraryItem"));
 		loadBuiltin.setText(Strings.get("projectLoadBuiltinItem"));

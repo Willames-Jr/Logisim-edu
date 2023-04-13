@@ -290,7 +290,8 @@ public class LocaleManager {
 			loadLocale(choices[0]);
 		if (locale != null)
 			return;
-		throw new RuntimeException("No locale bundles are available");
+		// TODO: REMOVE COMMENT
+//		throw new RuntimeException("No locale bundles are available");
 	}
 
 	private void loadLocale(Locale loc) {

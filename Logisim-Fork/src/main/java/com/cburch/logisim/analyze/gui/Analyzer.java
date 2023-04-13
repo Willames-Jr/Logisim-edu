@@ -50,7 +50,7 @@ public class Analyzer extends LFrame {
 				tab.delete();
 			} else if (src == LogisimMenuBar.SELECT_ALL) {
 				tab.selectAll();
-			}
+			}			
 		}
 
 		private void enableItems(LogisimMenuBar menubar) {
@@ -98,17 +98,20 @@ public class Analyzer extends LFrame {
 			tabbedPane.setTitleAt(OUTPUTS_TAB, Strings.get("outputsTab"));
 			tabbedPane.setTitleAt(TABLE_TAB, Strings.get("tableTab"));
 			tabbedPane.setTitleAt(EXPRESSION_TAB, Strings.get("expressionTab"));
+			tabbedPane.setTitleAt(ALGEBRA_TAB, Strings.get("algebraTab"));
 			tabbedPane.setTitleAt(MINIMIZED_TAB, Strings.get("minimizedTab"));
 			tabbedPane.setToolTipTextAt(INPUTS_TAB, Strings.get("inputsTabTip"));
 			tabbedPane.setToolTipTextAt(OUTPUTS_TAB, Strings.get("outputsTabTip"));
 			tabbedPane.setToolTipTextAt(TABLE_TAB, Strings.get("tableTabTip"));
 			tabbedPane.setToolTipTextAt(EXPRESSION_TAB, Strings.get("expressionTabTip"));
+			tabbedPane.setToolTipTextAt(ALGEBRA_TAB, Strings.get("algebraTabTip"));
 			tabbedPane.setToolTipTextAt(MINIMIZED_TAB, Strings.get("minimizedTabTip"));
 			buildCircuit.setText(Strings.get("buildCircuitButton"));
 			inputsPanel.localeChanged();
 			outputsPanel.localeChanged();
 			truthTablePanel.localeChanged();
 			expressionPanel.localeChanged();
+			algebraPanel.localeChanged();
 			minimizedPanel.localeChanged();
 			buildCircuit.localeChanged();
 		}
@@ -126,6 +129,7 @@ public class Analyzer extends LFrame {
 	public static final int EXPRESSION_TAB = 3;
 
 	public static final int MINIMIZED_TAB = 4;
+	public static final int ALGEBRA_TAB = 5;
 
 	public static void main(String[] args) {
 		Analyzer frame = new Analyzer();
@@ -143,6 +147,7 @@ public class Analyzer extends LFrame {
 	private VariableTab outputsPanel;
 	private TableTab truthTablePanel;
 	private ExpressionTab expressionPanel;
+	private AlgebraTab algebraPanel;
 	private MinimizedTab minimizedPanel;
 
 	private BuildCircuitButton buildCircuit;
@@ -152,6 +157,8 @@ public class Analyzer extends LFrame {
 		outputsPanel = new VariableTab(model.getOutputs());
 		truthTablePanel = new TableTab(model.getTruthTable());
 		expressionPanel = new ExpressionTab(model);
+		algebraPanel = new AlgebraTab(model);
+		
 		minimizedPanel = new MinimizedTab(model);
 		buildCircuit = new BuildCircuitButton(this, model);
 
@@ -163,6 +170,7 @@ public class Analyzer extends LFrame {
 		addTab(TABLE_TAB, truthTablePanel);
 		addTab(EXPRESSION_TAB, expressionPanel);
 		addTab(MINIMIZED_TAB, minimizedPanel);
+		addTab(ALGEBRA_TAB, algebraPanel);
 
 		Container contents = getContentPane();
 		JPanel vertStrut = new JPanel(null);
@@ -180,6 +188,7 @@ public class Analyzer extends LFrame {
 		inputsPanel.registerDefaultButtons(registry);
 		outputsPanel.registerDefaultButtons(registry);
 		expressionPanel.registerDefaultButtons(registry);
+		algebraPanel.registerDefaultButtons(registry);
 
 		LocaleManager.addLocaleListener(myListener);
 		myListener.localeChanged();
