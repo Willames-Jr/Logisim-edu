@@ -6,6 +6,7 @@ package com.cburch.logisim.analyze.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -246,6 +247,62 @@ public class TruthTable {
 		else
 			outputColumns.put(outputName, values);
 		fireCellsChanged(column);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (obj == null) {
+			return false;
+		}
+		
+		System.out.println(obj.getClass());
+		System.out.println(this.getClass());
+		
+		
+		if (obj.getClass() != this.getClass()) {
+			return false;
+		}
+		
+		/* A thuthTable is equals to another if the conditions are satisfied:
+			a) The number of inputs are equal
+			b) The number of outputs are equal
+			c) The values in column of input are equals
+			d) The values in column of outputs are equals
+		*/
+		final TruthTable table = (TruthTable) obj;
+		int inputs = table.getInputColumnCount();
+		int outputs = table.getOutputColumnCount();
+		int rows = table.getRowCount();
+		
+		if ((inputs != this.getInputColumnCount()) || (outputs != this.getOutputColumnCount())) {
+			return false;
+		}
+		
+		for (int i = 0; i < inputs; i++) {
+			System.out.println(table.getInputHeader(i));
+			System.out.println(this.getInputHeader(i));
+			if (!table.getInputHeader(i).equals(this.getInputHeader(i))) {
+				return false;
+			}
+		}
+		
+		// In this case we consider that the inputs obey a sequence.
+		// This means that in a table with n numbers of inputs, the column in 
+		// position 1 will have the same sequence of zeros and ones of a table 
+		// with the same number, n, of inputs.
+		// So we just need to compare the sequence of outputs.
+		
+		for (int c = 0; c < outputs; c++) {
+			Entry[] tableColumn = table.getOutputColumn(c);
+			Entry[] selfColumn = this.getOutputColumn(c);
+			for (int r = 0; r < rows; r++) {
+				if (tableColumn[r] != selfColumn[r]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public void setOutputEntry(int row, int column, Entry value) {
