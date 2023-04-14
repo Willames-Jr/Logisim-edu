@@ -65,7 +65,19 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 			String curText = getField().getText();
 			edited = curText.length() != curExprStringLength || !curText.equals(getCurrentString());
 			
-			enter.setEnabled(true);
+			if (auxModel != null && fieldCount == 0) {
+				insertTextField();
+				return;
+			}
+			if (auxModel == null ? false : !model.getTruthTable().equals(auxModel.getTruthTable()) && fieldCount != 0) {
+				getLabel().setText("Not equivalent" );
+				updateTab();
+				return;
+			} else if (fieldCount != 0) {
+				insertTextField();
+				return;
+			}
+			return;
 		}
 		
 		@Override
@@ -82,6 +94,7 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 		public void actionPerformed(ActionEvent event) {
 			Object src = event.getSource();
 			if ((src == enter) && enter.isEnabled()) {
+				if (auxModel == null) auxModel = new AnalyzerModel();
 				String text = getField().getText();
 				// INÍCIO: Trecho para pegar os inputs
 				ArrayList<String> inputs = new ArrayList<>();
@@ -104,13 +117,6 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 					auxModel.setVariables(inputs, outputs);
 				}
 				
-				
-				
-				
-				
-				
-				
-				
 				Expression expr; 
 				try {
 					expr = Parser.parse(getField().getText(), fieldCount == 0 ? model : auxModel);
@@ -119,17 +125,7 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println("Models equals: "+Boolean.toString(model.getTruthTable().equals(auxModel.getTruthTable())));
 				
-//				try {
-//					System.out.println("MODELO:"+ Parser.parse("a+b",model).toString());
-//					System.out.println("MODELO:"+ model.getOutputExpressions().getExpressionString("y"));
-//				} catch (ParserException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				//System.out.println("MODELO:"+model.getOutputExpressions().getExpression("y"));
-				insertTextField();
 				insertUpdate(null);
 			}
 			getField().grabFocus();
@@ -169,11 +165,10 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 
 	public AlgebraTab(AnalyzerModel model) {
 		this.model = model;
-		this.auxModel = new AnalyzerModel();
 		model.getOutputExpressions().addOutputExpressionsListener(myListener);
 		enter.addActionListener(myListener);
 		JTextField field = new JTextField(10);
-		JLabel label = new JLabel("test");
+		JLabel label = new JLabel("first input");
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
 		field.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), myListener);
@@ -230,9 +225,13 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 		return (JTextField)textFields.get(fieldCount).getComponent(0);
 	}
 	
+	JLabel getLabel() {
+		return (JLabel)textFields.get(fieldCount).getComponent(1);
+	}
+	
 	public void insertTextField() {
 		JTextField newField = new JTextField(10);
-		JLabel newLabel = new JLabel("correto");
+		JLabel newLabel = new JLabel("");
 		JPanel newPanel = new JPanel();
 		
 		
