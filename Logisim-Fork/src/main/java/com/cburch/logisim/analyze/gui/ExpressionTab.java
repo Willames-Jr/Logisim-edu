@@ -86,11 +86,9 @@ class ExpressionTab extends AnalyzerTab implements TabInterface {
 
 		@Override
 		public void expressionChanged(OutputExpressionsEvent event) {
-			System.out.println("ExpressionTab: "+event.getType());
 			
 			if (event.getType() == OutputExpressionsEvent.OUTPUT_EXPRESSION) {
 				String output = event.getVariable();
-				System.out.println("Expression: "+model.getOutputExpressions().getExpression(output));
 				if (output.equals(getCurrentVariable())) {
 					prettyView.setExpression(model.getOutputExpressions().getExpression(output));
 					currentStringChanged();

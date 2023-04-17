@@ -3,6 +3,7 @@
 
 package com.cburch.logisim.analyze.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cburch.logisim.circuit.Circuit;
@@ -47,6 +48,10 @@ public class AnalyzerModel {
 	public OutputExpressions getOutputExpressions() {
 		return outputExpressions;
 	}
+	
+	public void setOutputExpressions(OutputExpressions outputs) {
+		this.outputExpressions = outputs;
+	}
 
 	public VariableList getOutputs() {
 		return outputs;
@@ -54,6 +59,10 @@ public class AnalyzerModel {
 
 	public TruthTable getTruthTable() {
 		return table;
+	}
+	
+	public void setTruthTable(TruthTable table) {
+		this.table = table;
 	}
 
 	//
@@ -68,4 +77,6 @@ public class AnalyzerModel {
 		this.inputs.setAll(inputs);
 		this.outputs.setAll(outputs);
 	}
+	
+	
 }

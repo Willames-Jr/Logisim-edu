@@ -255,11 +255,7 @@ public class TruthTable {
 		if (obj == null) {
 			return false;
 		}
-		
-		System.out.println(obj.getClass());
-		System.out.println(this.getClass());
-		
-		
+
 		if (obj.getClass() != this.getClass()) {
 			return false;
 		}
@@ -280,8 +276,6 @@ public class TruthTable {
 		}
 		
 		for (int i = 0; i < inputs; i++) {
-			System.out.println(table.getInputHeader(i));
-			System.out.println(this.getInputHeader(i));
 			if (!table.getInputHeader(i).equals(this.getInputHeader(i))) {
 				return false;
 			}
@@ -304,7 +298,45 @@ public class TruthTable {
 		}
 		return true;
 	}
-
+	
+	public String toExpression(int format, String output) {
+		Entry desired = format == AnalyzerModel.FORMAT_SUM_OF_PRODUCTS ? Entry.ONE : Entry.ZERO;
+		String returnExpression = "";
+		int outputs = this.getOutputColumnCount();
+		int inputs = this.getInputColumnCount();
+		int entries = this.getRowCount();
+		
+		for (int i = 0; i < outputs; i++) {
+			String outputHeader = this.getOutputHeader(i);
+			if (!outputHeader.equals(output)) continue;
+			
+			Entry[] actualColumn = this.getOutputColumn(i);
+			for (int j = 0; j < entries; j++) {
+				Entry actualEntry = actualColumn[j];
+				if (actualEntry != desired) continue;
+				String inputExpression = "";
+				if (!returnExpression.isEmpty()) inputExpression += desired == Entry.ONE ? "+ " : " ";
+				inputExpression += "(";		
+				for (int k = 0; k < inputs; k++) {
+					String inputHeader = this.getInputHeader(k);
+					Entry input = this.getInputEntry(j, k);
+					
+					inputExpression += input == desired ? inputHeader : "~"+inputHeader;
+					if ((k + 1) != inputs) {
+						inputExpression += desired == Entry.ONE ? " " : "+";
+					}
+				}
+				
+				inputExpression += ") ";
+				
+				returnExpression += inputExpression;				
+			}
+		} 
+		
+		return returnExpression;
+	}
+	
+	
 	public void setOutputEntry(int row, int column, Entry value) {
 		int rows = getRowCount();
 		int outputs = model.getOutputs().size();
