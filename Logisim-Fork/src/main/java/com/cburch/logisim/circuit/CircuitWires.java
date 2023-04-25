@@ -34,7 +34,7 @@ import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.IteratorUtil;
 import com.cburch.logisim.util.SmallSet;
 
-class CircuitWires {
+public class CircuitWires {
 	static class BundleMap {
 		boolean computed = false;
 		Map<Location, WireBundle> pointBundles = new ConcurrentHashMap<Location, WireBundle>();
@@ -192,7 +192,7 @@ class CircuitWires {
 
 	private BundleMap bundleMap = null;
 
-	CircuitWires() {
+	public CircuitWires() {
 	}
 
 	//
@@ -200,7 +200,7 @@ class CircuitWires {
 	//
 	// NOTE: this could be made much more efficient in most cases to
 	// avoid voiding the bundle map.
-	boolean add(Component comp) {
+	public boolean add(Component comp) {
 		boolean added = true;
 		if (comp instanceof Wire) {
 			added = addWire((Wire) comp);
@@ -593,7 +593,7 @@ class CircuitWires {
 		return ret;
 	}
 
-	Iterator<? extends Component> getComponents() {
+	public Iterator<? extends Component> getComponents() {
 		return IteratorUtil.createJoinedIterator(splitters.iterator(), wires.iterator());
 	}
 

@@ -120,16 +120,73 @@ public class Bounds {
 		return add(p.getX(), p.getY());
 	}
 
-	public boolean borderContains(int px, int py, int fudge) {
-		int x1 = x + wid - 1;
-		int y1 = y + ht - 1;
+	public boolean borderContains(int px, int py,int w, int h, int fudge) {
+		
+		int x1 = x + wid;
+		int y1 = y + ht ;
+		int px1 = px + w ;
+		int py1 = py + h ;
+		
+		System.out.print("px | py ");
+		System.out.print(px);
+		System.out.print(" ");
+		System.out.println(py);
+//		if ((x < px1) && (x1 > px) && (y < py1) && (y1 > py)) {
+//			if((Math.abs(x - px1) <= fudge) || (Math.abs(x1 - px) <= fudge) 
+//					|| (Math.abs(y - py1) <= fudge) || (Math.abs(y1 - py) <= fudge)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//		System.out.println(" ");
+//		System.out.print("x | y ");
+//		System.out.print(x);
+//		System.out.print(" ");
+//		System.out.println(y);
+//		System.out.print("px | py ");
+//		System.out.print(px);
+//		System.out.print(" ");
+//		System.out.println(py);
+//		System.out.print("x1 | y1 ");
+//		System.out.print(x1);
+//		System.out.print(" ");
+//		System.out.println(y1);
+//		System.out.print("px1 | py1 ");
+//		System.out.print(px1);
+//		System.out.print(" ");
+//		System.out.println(py1);
+		
 		if (Math.abs(px - x) <= fudge || Math.abs(px - x1) <= fudge) {
 			// maybe on east or west border?
-			return y - fudge >= py && py <= y1 + fudge;
+			return py1 >= y - fudge  && py1 <= y1 + fudge;
 		}
 		if (Math.abs(py - y) <= fudge || Math.abs(py - y1) <= fudge) {
 			// maybe on north or south border?
-			return x - fudge >= px && px <= x1 + fudge;
+			return px1 >= x - fudge   && px1 <= x1 + fudge;
+		}
+		return false;
+	}
+
+	public boolean borderContains(Location p, int w, int h, int fudge) {
+		return borderContains(p.getX(), p.getY(), w, h,fudge);
+	}
+	
+	
+	public boolean borderContains(int px, int py, int fudge) {
+		int x1 = x + wid - 1;
+		int y1 = y + ht - 1;
+		System.out.print("px | py ");
+		System.out.print(px);
+		System.out.print(" ");
+		System.out.println(py);
+		
+		if (Math.abs(px - x) <= fudge || Math.abs(px - x1) <= fudge) {
+			// maybe on east or west border?
+			return py >= y - fudge  && py <= y1 + fudge;
+		}
+		if (Math.abs(py - y) <= fudge || Math.abs(py - y1) <= fudge) {
+			// maybe on north or south border?
+			return px >= x - fudge && px <= x1 + fudge;
 		}
 		return false;
 	}

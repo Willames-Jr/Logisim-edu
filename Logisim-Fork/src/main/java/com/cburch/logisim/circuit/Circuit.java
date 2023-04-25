@@ -4,6 +4,7 @@
 package com.cburch.logisim.circuit;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -325,7 +326,91 @@ public class Circuit {
 	CircuitLocker getLocker() {
 		return locker;
 	}
-
+	
+	public String toExpression() {
+		Set<Component> comp =  this.getComponents();
+		ArrayList<Component> outs = new ArrayList<>();
+		ArrayList<Component> ints = new ArrayList<>();
+		ArrayList<Component> wires = new ArrayList<>();
+		ArrayList<Component> gates = new ArrayList<>();
+	
+		comp.forEach(c -> {
+			/* É possível descobrir se é um fio
+			 * Wire
+			 * Se é um portão
+			 * <NOME> Gate
+			 * Se é output/input
+			 * Pin
+			 */
+			String type = c.getFactory().toString();
+			if (type.equals("Pin")) {
+				Boolean is_output = Boolean.valueOf(c.getAttributeSet().getValue(c.getAttributeSet().getAttribute("output")).toString());
+				if (is_output) {
+					outs.add(c);
+				} else {
+					ints.add(c);
+				}
+			} else if (type.equals("Wire")) {
+				wires.add(c);
+			} else {
+				gates.add(c);
+			}
+		});
+		outs.forEach(out -> {
+			ArrayList<Component> previousComponents = new ArrayList<>();
+			System.out.println(test(comp, out));
+		});
+		return "";
+	}
+	private ArrayList<Component> previousComponent(Set<Component> comps, Component initialComp) {
+		ArrayList<Component> endComps = new ArrayList<>();
+		for (Component comp : comps) {
+			if (comp.endsAt(initialComp.getLocation())) {
+				endComps.add(comp);
+				break;
+			}
+		}
+		return endComps;
+	}
+	
+	private String test(Set<Component> comps, Component initialComp) {
+		ArrayList<Component> endComps = new ArrayList<>();
+		String returnString = "(";
+		String operator = initialComp.getFactory().toString().equals("AND Gate") ? " " : "+";
+		// Dando loop infinito sempre chamando a funbção
+		System.out.println("olá");
+		for (Component comp : comps) {
+			if (comp.endsAt(initialComp.getLocation())) {
+				while (comp.getFactory().toString().equals("Wire")) {
+					for (Component aux : comps) {
+						if (aux.getFactory().toString().equals("AND Gate")) {
+							System.out.print("GAte: ");
+							System.out.println(aux.endsAt(comp.getLocation()));
+						}
+						if (aux.endsAt(comp.getLocation())) {
+							comp = aux;
+							System.out.print("Mudei: ");
+							System.out.print(comp.getFactory().toString());
+							break;
+						}
+					}
+				}
+				
+				endComps.add(comp);
+			}
+		}
+		for (Component endComp : endComps) {
+			Boolean is_output = Boolean.valueOf(endComp.getAttributeSet().getValue(endComp.getAttributeSet().getAttribute("output")).toString());
+			if (endComp.getFactory().toString().equals("Pin") && !is_output) {
+				returnString += endComp.getAttributeSet().getAttribute("label").toString() + operator;
+			} else {
+				returnString += test(comps, endComp);
+			}	
+		}
+		returnString += ")";
+		return returnString;
+	}
+	
 	//
 	// access methods
 	//

@@ -13,6 +13,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -32,7 +34,14 @@ import com.cburch.logisim.analyze.model.Parser;
 import com.cburch.logisim.analyze.model.ParserException;
 import com.cburch.logisim.analyze.model.TruthTable;
 import com.cburch.logisim.analyze.model.VariableList;
+import com.cburch.logisim.circuit.Circuit;
+import com.cburch.logisim.circuit.CircuitState;
+import com.cburch.logisim.circuit.CircuitWires;
+import com.cburch.logisim.circuit.ExpressionComputer;
+import com.cburch.logisim.circuit.Wire;
 import com.cburch.logisim.comp.Component;
+import com.cburch.logisim.data.Bounds;
+import com.cburch.logisim.proj.Project;
 import com.cburch.logisim.util.StringGetter;
 
 class AlgebraTab extends AnalyzerTab implements TabInterface {
@@ -72,6 +81,8 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 		
 		@Override
 		public void insertUpdate(DocumentEvent event) {
+
+			
 			String curText = getField().getText();
 			
 			edited = curText.length() != curExprStringLength || !curText.equals(getCurrentString());
@@ -134,13 +145,11 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 			if (auxModel == null) {
 				minimalOutputs = model.getOutputExpressions();
 			}
-//			try {
-//				
-//			} catch (Exception e){
-//				return;
-//			}
 			
 			if ((src == enter) && enter.isEnabled()) {
+				 
+				System.out.println(model.getCurrentCircuit().toExpression());
+				
 				isChecking = true;
 				if (auxModel == null) {
 					auxModel = new AnalyzerModel();
@@ -209,7 +218,6 @@ class AlgebraTab extends AnalyzerTab implements TabInterface {
 
 	public AlgebraTab(AnalyzerModel model) {
 		this.model = model;
-		
 		
 		model.getOutputExpressions().addOutputExpressionsListener(myListener);
 		enter.addActionListener(myListener);
